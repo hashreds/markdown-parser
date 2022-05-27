@@ -1,10 +1,11 @@
 import static org.junit.Assert.*; // imports assertEquals
 import org.junit.*; // imports JUnit library
 
-//import java.io.IOException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MarkdownParseTest { // class declaration
    
@@ -45,5 +46,31 @@ public class MarkdownParseTest { // class declaration
         ArrayList<String> expectedLinks = new ArrayList<String>();
         expectedLinks.add("no links found");
         assertEquals(expectedLinks, links);
+    }
+
+    //@Test
+    public void testCodeSnippets() throws IOException {
+        String contents = Files.readString(Path.of("test-code-snippets.md"));
+        List<String> expect = List.of("`google.com", "google.com", "ucsd.edu");
+        //System.out.println(contents);
+        assertEquals(expect, MarkdownParse.getLinks(contents));
+    }
+
+    @Test
+    public void testWackyBrackets() throws IOException {
+        String contents = Files.readString(Path.of("test-wacky-brackets.md"));
+        List<String> expect = List.of("a.com", "a.com(())", "example.com");
+        //System.out.println(contents);
+        assertEquals(expect, MarkdownParse.getLinks(contents));
+    }
+    
+    //@Test
+    public void testLongTitles() throws IOException {
+        String contents = Files.readString(Path.of("test-long-title.md"));
+        List<String> expect = List.of("https://www.twitter.com", 
+        "https://sites.google.com/eng.ucsd.edu/cse-15l-spring-2022/schedule", 
+        "https://cse.ucsd.edu/");
+        //System.out.println(contents);
+        assertEquals(expect, MarkdownParse.getLinks(contents));
     }
 }
